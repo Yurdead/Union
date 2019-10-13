@@ -2,7 +2,7 @@ const whitelist = require("./modules/whitelist");
 
 module.exports = {
     "veh": {
-        description: "Создать автомобиль.",
+        description: "Créer une voiture.",
         minLevel: 3,
         syntax: "[model]:s",
         handler: (player, args) => {
@@ -13,7 +13,7 @@ module.exports = {
             //var model = hashes[args[0]];
             var model = args[0];
             delete hashes;
-            if (!model) return terminal.error(`Модель ${args[0]} не найдена!<br/>Сообщите команде проекта, если Вы не ошиблись в названии.`, player);
+            if (!model) return terminal.error(`Modèle ${args[0]} non trouvé!<br/>Informez l'équipe du projet si vous vous êtes trompé de nom..`, player);
 
             var vehicle = mp.vehicles.new(model, pos, {
                 engine: false
@@ -24,52 +24,52 @@ module.exports = {
             vehicle.maxFuel = 70;
             vehicle.dimension = player.dimension;
             vehicle.license = 0;
-            terminal.info(`${player.name} создал авто ${args[0]}`);
-            mp.logs.addLog(`${player.name} создал авто. Марка: ${args[0]}`, 'main', player.account.id, player.sqlId, { level: player.admin, model: args[0] });
+            terminal.info(`${player.name} crée une voiture ${args[0]}`);
+            mp.logs.addLog(`${player.name} crée une voiture. Marque: ${args[0]}`, 'main', player.account.id, player.sqlId, { level: player.admin, model: args[0] });
         }
     },
     "delete_veh": {
-        description: "Удалить авто. Если авто есть в БД, то также удаляется.",
+        description: "Supprimer la voiture. Si la voiture est dans la base de données, elle est également supprimée.",
         minLevel: 3,
         syntax: "",
         handler: (player, args) => {
             var veh = player.vehicle;
-            if (!veh) return terminal.error(`Вы не в авто!`, player);
+            if (!veh) return terminal.error(`Vous n'êtes pas dans une voiture!`, player);
 
             if (veh.sqlId) {
-                terminal.info(`${player.name} удалил авто из БД`, player);
-                mp.logs.addLog(`${player.name} удалил авто из БД`, 'main', player.account.id, player.sqlId, { level: player.admin });
+                terminal.info(`${player.name} supprimé une voiture de la base de données`, player);
+                mp.logs.addLog(`${player.name} supprimé une voiture de la base de données`, 'main', player.account.id, player.sqlId, { level: player.admin });
                 DB.Handle.query(`DELETE FROM vehicles WHERE id=?`, [veh.sqlId]);
-            } else terminal.info(`${player.name} удалил авто`, player);
+            } else terminal.info(`${player.name} supprimé une voiture`, player);
             veh.destroy();
         }
     },
     "veh_color": {
-        description: "Изменить цвет авто.",
+        description: "Changer la couleur automatique.",
         minLevel: 3,
         syntax: "[colorA]:n [colorB]:n",
         handler: (player, args) => {
             var veh = player.vehicle;
-            if (!veh) return player.utils.error(`Вы не в авто!`, player);
+            if (!veh) return player.utils.error(`Vous n'êtes pas dans la voiture!`, player);
 
             veh.setColor(args[0], args[1]);
-            mp.logs.addLog(`${player.name} изменил цвет автомобилия для авто с ID: ${veh.id}`, 'main', player.account.id, player.sqlId, { level: player.admin, vehId: veh.id });
-            terminal.log(`Цвет авто изменен`, player);
+            mp.logs.addLog(`${player.name} changé la couleur de la voiture pour les voitures avec ID: ${veh.id}`, 'main', player.account.id, player.sqlId, { level: player.admin, vehId: veh.id });
+            terminal.log(`La couleur automatique a changé`, player);
         }
     },
     "veh_license": {
-        description: "Изменить лицензию для вождения авто. Типы:<br/>1 - авто<br/>2 - мото<br/>3 - Лодка<br/>4 - Яхта<br/>11 - вертолёт<br/>12 - самолёт",
+        description: "Changer de permis pour conduire une voiture. Типы:<br/>1 - auto<br/>2 - мото<br/>3 - Bateau<br/>4 - Yacht<br/>11 - hélicoptère<br/>12 - l'avion",
         minLevel: 3,
         syntax: "[license]:n",
         handler: (player, args) => {
             var veh = player.vehicle;
-            if (!veh) return player.utils.error(`Вы не в авто!`, player);
+            if (!veh) return player.utils.error(`Vous n'êtes pas dans la voiture!`, player);
             var types = [1, 2, 3, 4, 11, 12];
             if (args[0] && types.indexOf(args[0]) == -1) return terminal.error(`Неверный тип лицензии!`, player);
 
             veh.utils.setLicense(args[0]);
-            mp.logs.addLog(`${player.name} изменил категорию лицензии для авто с ID: ${veh.id}`, 'main', player.account.id, player.sqlId, { level: player.admin, vehId: veh.id });
-            terminal.info(`${player.name} изменил категорию лицензии для авто с ID: ${veh.id}`);
+            mp.logs.addLog(`${player.name} a changé la catégorie de permis pour les voitures avec ID: ${veh.id}`, 'main', player.account.id, player.sqlId, { level: player.admin, vehId: veh.id });
+            terminal.info(`${player.name} a changé la catégorie de permis pour les voitures avec ID: ${veh.id}`);
         }
     },
     "fix": {
